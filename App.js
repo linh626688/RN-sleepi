@@ -9,9 +9,10 @@ class App extends React.Component {
     hour: null,
     minute: null,
     session: 'AM',
-    result: '',
+    result: [],
     showResult: false,
     isDateTimePickerVisible: false,
+
   };
   _showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
 
@@ -20,8 +21,30 @@ class App extends React.Component {
   _handleDatePicked = (date) => {
     console.log('A date has been picked: ', date);
     let pickDate = new Date(date);
-    console.log('Sub time: ', date.getTime() - 1);
+    let lstResult = [];
+    lstResult.push(this.getTimeFromMilisecond(date.getTime() - 5400000));
+    lstResult.push(this.getTimeFromMilisecond(date.getTime() - 10800000));
+    lstResult.push(this.getTimeFromMilisecond(date.getTime() - 16200000));
+    lstResult.push(this.getTimeFromMilisecond(date.getTime() - 21600000));
+    lstResult.push(this.getTimeFromMilisecond(date.getTime() - 27000000));
+    lstResult.push(this.getTimeFromMilisecond(date.getTime() - 32400000));
+    console.log('Sub time 1: ', this.getTimeFromMilisecond(date.getTime() - 5400000));
+    console.log('Sub time 2: ', this.getTimeFromMilisecond(date.getTime() - 10800000));
+    console.log('Sub time 3: ', this.getTimeFromMilisecond(date.getTime() - 16200000));
+    console.log('Sub time 4: ', this.getTimeFromMilisecond(date.getTime() - 21600000));
+    console.log('Sub time 5: ', this.getTimeFromMilisecond(date.getTime() - 27000000));
+    console.log('Sub time 6: ', this.getTimeFromMilisecond(date.getTime() - 32400000));
+    this.setState({result: lstResult})
   };
+
+  getTimeFromMilisecond = (milli) => {
+    let time = new Date(milli);
+    let hours = time.getUTCHours();
+    let minutes = time.getUTCMinutes();
+    let seconds = time.getUTCSeconds();
+    let milliseconds = time.getUTCMilliseconds();
+    return hours + ":" + minutes;
+  }
 
   handlePickHour = (hour) => {
     this.setState({
@@ -73,6 +96,20 @@ class App extends React.Component {
           onConfirm={this._handleDatePicked}
           onCancel={this._hideDateTimePicker}
         />
+        {
+          this.state.result.map((item, index) => (
+            <TouchableOpacity
+              key = {item}
+              style = {styles.container}
+              onPress = {() => alert(item)}
+            >
+
+              <Text style = {styles.text}>
+                {item}
+              </Text>
+            </TouchableOpacity>
+          ))
+        }
       </View>
     )
   }
